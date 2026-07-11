@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-slate-50: #f1f5f9;
+  --color-slate-900: #0f172a;
+  --color-primary: #ea580c;
+  --font-display: "Outfit", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  --shadow-neumorphic-outer: 8px 8px 16px #cbd5e1, -8px -8px 16px #ffffff;
+  --shadow-neumorphic-inner: inset 4px 4px 8px #cbd5e1, inset -4px -4px 8px #ffffff;
+  --shadow-neumorphic-button: 6px 6px 12px #cbd5e1, -6px -6px 12px #ffffff;
+  --shadow-neumorphic-button-hover: 3px 3px 6px #cbd5e1, -3px -3px 6px #ffffff;
+  --shadow-neumorphic-button-active: inset 3px 3px 6px #cbd5e1, inset -3px -3px 6px #ffffff;
+}
+
+/* Custom Neumorphism Styles */
+.neu-card {
+  background: #f1f5f9;
+  box-shadow: 12px 12px 24px #cbd5e1, -12px -12px 24px #ffffff;
+  border-radius: 1.5rem;
+}
+
+.neu-input {
+  background: #f1f5f9;
+  box-shadow: inset 4px 4px 8px #cbd5e1, inset -4px -4px 8px #ffffff;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neu-input:focus {
+  outline: none;
+  box-shadow: inset 6px 6px 12px #cbd5e1, inset -6px -6px 12px #ffffff;
+}
+
+.neu-checkbox {
+  appearance: none;
+  background: #f1f5f9;
+  box-shadow: inset 2px 2px 4px #cbd5e1, inset -2px -2px 4px #ffffff;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.375rem;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.neu-checkbox::before {
+  content: "";
+  width: 0.65rem;
+  height: 0.65rem;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1rem 1rem #ea580c;
+  border-radius: 0.125rem;
+}
+
+.neu-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.neu-button {
+  background: #f1f5f9;
+  box-shadow: 6px 6px 12px #cbd5e1, -6px -6px 12px #ffffff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neu-button:hover {
+  box-shadow: 3px 3px 6px #cbd5e1, -3px -3px 6px #ffffff;
+  transform: translateY(1px);
+}
+
+.neu-button:active {
+  box-shadow: inset 3px 3px 6px #cbd5e1, inset -3px -3px 6px #ffffff;
+  transform: translateY(2px);
+}
+
+@layer utilities {
+  .hero-button-hover:hover {
+    position: relative;
+    left: 3px;
+    bottom: 3px;
+    box-shadow: -3px 3px 4px black;
+    background: white;
+    border-radius: 10px;
+    color: black;
+    transition: all 0.5s linear;
+  }
+  .hero-button-hover:active {
+    scale: 0.90;
+  }
+  .slideX{
+    animation: slideXAnimation 0.5s ease-in-out;
+    transition: all linear 0.5s;
+  }
+  .rotor {
+    animation-name: rotor;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+
+    animation-timeline: view(block);
+    animation-range: entry 0% cover 50%;
+  }
+  @keyframes slideXAnimation {
+    from  {
+      transform : translateX(-50px);
+      opacity: 0;
+    }
+    to {
+      transform : translateX(0);
+      opacity: 100;
+    }
+  }
+  @keyframes rotor {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+}

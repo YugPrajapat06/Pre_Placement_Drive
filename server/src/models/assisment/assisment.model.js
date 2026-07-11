@@ -3,17 +3,31 @@ import mongoose from "mongoose";
 const AssismentSchema = new mongoose.Schema({
     user : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User"
+        ref : "User",
+        required: true
     },
     questionsId : {
         type : [mongoose.Schema.Types.ObjectId],
+        ref : "Question",
         required : true
     },
 
-    startTime : new Date(),
-
-    duration : 30,
-
+    startTime : {
+        type : Date,
+        default : null
+    },
+    duration : {
+        type : Number,
+        default : 30
+    },
+    endTime : {
+        type : Date,
+        default : null
+    },
+    started: {
+        type : Boolean,
+        default : false
+    },
     score : {
         type : Number,
         default : 0

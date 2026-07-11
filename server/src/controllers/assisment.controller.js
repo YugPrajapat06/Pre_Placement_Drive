@@ -39,6 +39,50 @@ const createAssisment = async (req, res) => {
     }
 }
 
+const startAssisment = async (req, res) => {
+    const assismentId = req.params.id;
+
+    try {
+        const assisment = await assismentModel.findById(assismentId)
+        if(!assisment){
+            return res.status(404).json({
+                message : "Assisment Not found",
+                success : false
+            })
+        }
+
+        if(assisment.started){
+            return res.status(409).json({
+                message : "Assisment Already started",
+                success : false
+            })
+        }
+
+        if(assisment.isSubmitted){
+            return res.status(409).json({
+                message : "Assisment Already Submited",
+                success : false
+            })
+        }
+
+        const start = Date.now();
+        assisment.started = true;
+        assisment.startTime = new Date(start);
+        assisment.endTime = new Date(start + (assisment.duration * 60 * 1000));
+        await assisment.save()
+        return res.status(200).json({
+            message : "Assisment started successfully",
+            success : true,
+            assisment
+        })
+    } catch (error) {
+        return res.status(500).json({
+            error: error,
+            success : false
+        })
+    }
+}
+
 const submitAssisment = async (req, res) => {
     const { answers } = req.body
     const AssismentId = req.params.id
@@ -63,10 +107,13 @@ const submitAssisment = async (req, res) => {
             });
         }
 
-        const endTime = new Date();
-        const duration = Math.floor((endTime - assisment.startTime) / (1000 * 60));
-
-        if (duration > assisment.duration) {
+        if(!assisment.started) {
+            return res.status(400).json({
+                message : "Assisment has not been started yet",
+                success : false
+            })
+        }
+        if (Date.now() > assisment.endTime.getTime()) {
             return res.status(400).json({ message: "Time limit exceeded" });
         }
 
@@ -79,6 +126,7 @@ const submitAssisment = async (req, res) => {
         let score = 0;
         answers.forEach(answer => {
             const question = questionMap.get(answer.questionId);
+            if(!question) return;
             if (question.correctOption === answer.selectedOption) {
                 score += 1;
             }
@@ -86,6 +134,7 @@ const submitAssisment = async (req, res) => {
 
         assisment.score = score;
         assisment.isSubmitted = true;
+        assisment.started = false;
         await assisment.save();
         return res.status(200).json({ message: "Assisment submitted successfully" });
     } catch (error) {
@@ -152,6 +201,7 @@ const addQuestion = async (req, res) => {
 export default {
     createAssisment,
     submitAssisment,
+    startAssisment,
     getAssisments,
     getAssisment,
     addQuestion

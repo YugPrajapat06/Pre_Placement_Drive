@@ -1,9 +1,10 @@
-import userModel from "../models/user.model";
+import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 
 
 const registerCtlr = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, number, role } = req.body;
+    
     try {
         const isUserExist = await userModel.findOne({
             $or: [
@@ -22,7 +23,9 @@ const registerCtlr = async (req, res) => {
         const user = await userModel.create({
             username,
             email,
-            password
+            password,
+            number,
+            role
         });
 
         const token = jwt.sign(
@@ -35,7 +38,7 @@ const registerCtlr = async (req, res) => {
             { expiresIn: "3d" }
         );
 
-        req.cookie("token", token)
+        res.cookie("token", token)
 
 
         return res.status(201).json({
@@ -49,7 +52,8 @@ const registerCtlr = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             message: "Server is Failed to Register, try after some time...",
-            success: false
+            success: false,
+            error : error
         });
     }
 }
@@ -85,7 +89,7 @@ const loginCtlr = async (req, res) => {
             { expiresIn: "3d" }
         );
 
-        req.cookie("token", token)
+        res.cookie("token", token)
 
         return res.status(200).json({
             message: "User logged in successfully",

@@ -5,7 +5,7 @@ export async function IdentifyUser(req, res, next){
 
     if(!token){
         return res.status(401).json({
-            message : "Unauthorized",
+            message : "Unauthorized, Token not found",
             success : false
         });
     }
