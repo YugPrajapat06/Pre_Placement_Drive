@@ -2,13 +2,15 @@ import { createBrowserRouter } from "react-router";
 import Login from "../../features/auth/pages/Login";
 import Register from "../../features/auth/pages/Register";
 import Landing from "../../features/landing/pages/Landing";
-import StartAss from "../../features/assissment/pages/StartAss";
+import Deshboard from "../../features/assissment/pages/Deshboard";
 import Assessment from "../../features/assissment/pages/Assessment";
 import Interview from "../../features/assissment/pages/Interview";
 import AssessmentDetail from "../../features/assissment/pages/AssessmentDetail";
 import TakeAssessment from "../../features/assissment/pages/TakeAssessment";
 import Protected from "../components/Protected";
 import DashboardLayout from "../layouts/DashboardLayout";
+import Admin from "../../features/admin/pages/Admin";
+import AddQuestion from "../../features/admin/pages/AddQuestion";
 
 export const router = createBrowserRouter([
     {
@@ -42,7 +44,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "/home",
-                element: <StartAss />
+                element: <Deshboard />
             },
             {
                 path: "/assessment",
@@ -55,6 +57,14 @@ export const router = createBrowserRouter([
             {
                 path: "/interview",
                 element: <Interview />
+            },
+            {
+                path: "/admin",
+                element: <Admin />
+            },
+            {
+                path: "/admin/add-question",
+                element: <AddQuestion />
             },
         ],
     },

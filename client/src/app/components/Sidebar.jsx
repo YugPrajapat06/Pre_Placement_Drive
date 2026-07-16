@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   User,
+  ShieldCheck,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 
@@ -33,7 +34,11 @@ const navItems = [
 const Sidebar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const {user} = useSelector(state => state.auth)
+  const {user} = useSelector(state => state.auth);
+
+  const activeNavItems = user?.role === "admin" 
+    ? [...navItems, { label: "Admin Panel", icon: ShieldCheck, path: "/admin" }]
+    : navItems;
 
   return (
     <>
@@ -59,8 +64,8 @@ const Sidebar = () => {
           <p className="px-3 mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Navigation
           </p>
-          {navItems.map(({ label, icon: Icon, path }) => {
-            const active = location.pathname === path;
+          {activeNavItems.map(({ label, icon: Icon, path }) => {
+            const active = location.pathname === path || (path === "/admin" && location.pathname.startsWith("/admin"));
             return (
               <NavLink
                 key={path}
@@ -137,12 +142,12 @@ const Sidebar = () => {
         {/* Mobile Dropdown Menu */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+            mobileOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
           <nav className="flex flex-col gap-1 px-3 pb-3">
-            {navItems.map(({ label, icon: Icon, path }) => {
-              const active = location.pathname === path;
+            {activeNavItems.map(({ label, icon: Icon, path }) => {
+              const active = location.pathname === path || (path === "/admin" && location.pathname.startsWith("/admin"));
               return (
                 <NavLink
                   key={path}
@@ -174,8 +179,8 @@ const Sidebar = () => {
       {/* ── MOBILE BOTTOM TAB BAR (alternative ultra-clean nav) ──────── */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-orange-100 shadow-[0_-4px_20px_rgba(249,115,22,0.08)]">
         <div className="flex items-center justify-around px-2 py-2">
-          {navItems.map(({ label, icon: Icon, path }) => {
-            const active = location.pathname === path;
+          {activeNavItems.map(({ label, icon: Icon, path }) => {
+            const active = location.pathname === path || (path === "/admin" && location.pathname.startsWith("/admin"));
             return (
               <NavLink
                 key={path}

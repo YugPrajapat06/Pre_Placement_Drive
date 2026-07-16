@@ -7,29 +7,13 @@ const assessmentTypes = [
   {
     title: "Consolidated Placement Test",
     desc: "A comprehensive test merging Aptitude, Reasoning, Verbal, and Technical questions to match placement patterns.",
-    duration: "30 min",
+    duration: "40 min",
     difficulty: "Medium",
     color: "from-orange-400 to-orange-500",
     badge: "bg-orange-100 text-orange-700",
   },
   {
-    title: "Aptitude Round",
-    desc: "Quantitative challenges, verbal logic, and analytical problem-solving.",
-    duration: "15 min",
-    difficulty: "Easy",
-    color: "from-amber-400 to-amber-500",
-    badge: "bg-amber-100 text-amber-700",
-  },
-  {
-    title: "Logical Reasoning",
-    desc: "Pattern recognition, puzzle solving, and decision-making logic.",
-    duration: "20 min",
-    difficulty: "Medium",
-    color: "from-rose-400 to-rose-500",
-    badge: "bg-rose-100 text-rose-700",
-  },
-  {
-    title: "Technical Assessment",
+    title: "Technical Assessment (Comming Soon)",
     desc: "Core engineering subjects, coding concept MCQs, and tech fundamentals.",
     duration: "30 min",
     difficulty: "Hard",
@@ -38,12 +22,19 @@ const assessmentTypes = [
   },
 ];
 
+const active = [0]
+
 const Assessment = () => {
   const navigate = useNavigate();
   const { handleCreateAssisment } = useAssisment();
   const [creating, setCreating] = useState(false);
 
   const handleStart = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to start the assessment? This will create a new assessment session."
+    );
+    if (!confirmed) return;
+
     setCreating(true);
     const res = await handleCreateAssisment();
     setCreating(false);
@@ -74,7 +65,7 @@ const Assessment = () => {
 
         {/* Cards grid */}
         <div className="grid gap-5 sm:grid-cols-2">
-          {assessmentTypes.map((item) => (
+          {assessmentTypes.map((item,index) => (
             <div
               key={item.title}
               className="group rounded-3xl border border-orange-100 bg-white p-6 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:shadow-orange-100 transition-all duration-200"
@@ -100,11 +91,10 @@ const Assessment = () => {
                   {item.difficulty}
                 </span>
               </div>
-
               <button
                 onClick={handleStart}
                 disabled={creating}
-                className="mt-5 flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow shadow-orange-200 transition hover:from-orange-600 hover:to-orange-700 active:scale-95 disabled:opacity-50"
+                className={`mt-5 flex items-center gap-2 rounded-xl ${active.includes(index) ? "bg-linear-to-r from-orange-500 to-orange-600" : "bg-gray-700 pointer-events-none"} px-4 py-2.5 text-sm font-semibold text-white shadow shadow-orange-200 transition hover:from-orange-600 hover:to-orange-700 active:scale-95 disabled:opacity-50`}
               >
                 {creating ? (
                   <Loader2 size={15} className="animate-spin" />

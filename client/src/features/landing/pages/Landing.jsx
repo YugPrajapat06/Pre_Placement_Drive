@@ -59,6 +59,7 @@ const Landing = () => {
                                 }}>SIGN IN <span className='text-black'>IF ALREADY REGISTER</span></button>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
                 <div className='h-2 w-full bg-amber-400'></div>
@@ -126,7 +127,7 @@ const Landing = () => {
                                 <div className='rounded-[1.75rem] border text-center border-slate-200 bg-linear-to-br from-slate-950 via-slate-900 to-orange-600 p-6 text-white shadow-2xl shadow-slate-300'>
                                     <h1 className='font-semibold'>YUGVENDRA PRAJAPAT, <span className='text-teal-500'>MERN STACK DEVELOPER</span></h1>
                                 </div>
-                                <p className='mt-2'>I am YUGVENDRA PRAJAPAT, Currently i am in 4th year of my collage. I am student of SIRT College Bhopal which is affilated with RGPV University, Bhopal.</p>
+                                <p className='mt-2'>Hii, I am YUGVENDRA PRAJAPAT, Currently i am in 4th year of my collage. I am student of SIRT College which is affilated with RGPV University, Bhopal.</p>
                                 <p className='text-orange-600 text-sm mt-2'>yugprajapat6@gmail.com</p>
                             </div>
 

@@ -58,6 +58,8 @@ export async function getAssisment(id) {
 
 export async function addQuestion(data) {
     try {
+        
+        
         const res = await api.post("/add-question",data)
         return res.data
     } catch (error) {

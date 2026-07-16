@@ -9,4 +9,4 @@ authRouter.post("/register",registerValidator, authController.registerCtlr);
 authRouter.post("/login",loginValidator, authController.loginCtlr);
 authRouter.get("/get-me", IdentifyUser ,authController.getMeCtlr);    
 
-export default authRouter;
+export default authRouter;      

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { useAssisment } from "../hooks/useAssisment.js";
+
 import {
   Clock,
   ChevronLeft,
@@ -26,9 +27,8 @@ const TimerDisplay = ({ seconds }) => {
   const isLow = seconds < 300; // under 5 min → red warning
   return (
     <span
-      className={`font-mono text-lg font-bold tabular-nums transition-colors ${
-        isLow ? "text-rose-500 animate-pulse" : "text-orange-600"
-      }`}
+      className={`font-mono text-lg font-bold tabular-nums transition-colors ${isLow ? "text-rose-500 animate-pulse" : "text-orange-600"
+        }`}
     >
       {pad(m)}:{pad(s)}
     </span>
@@ -38,25 +38,22 @@ const TimerDisplay = ({ seconds }) => {
 const OptionButton = ({ letter, text, selected, onClick }) => (
   <button
     onClick={onClick}
-    className={`group flex w-full items-start gap-4 rounded-2xl border-2 p-4 text-left transition-all duration-150 ${
-      selected
+    className={`group flex w-full items-start gap-4 rounded-2xl border-2 p-4 text-left transition-all duration-150 ${selected
         ? "border-orange-500 bg-orange-50 shadow-md shadow-orange-100"
         : "border-slate-200 bg-white hover:border-orange-300 hover:bg-orange-50/60"
-    }`}
+      }`}
   >
     <span
-      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-colors ${
-        selected
+      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-sm font-bold transition-colors ${selected
           ? "bg-orange-500 text-white"
           : "bg-slate-100 text-slate-500 group-hover:bg-orange-100 group-hover:text-orange-600"
-      }`}
+        }`}
     >
       {letter}
     </span>
     <span
-      className={`mt-1 text-sm leading-relaxed ${
-        selected ? "font-semibold text-orange-700" : "text-slate-700"
-      }`}
+      className={`mt-1 text-sm leading-relaxed ${selected ? "font-semibold text-orange-700" : "text-slate-700"
+        }`}
     >
       {text}
     </span>
@@ -127,13 +124,12 @@ const QuestionNav = ({
               <button
                 key={i}
                 onClick={() => onJump(i)}
-                className={`h-9 w-9 rounded-xl text-xs font-bold transition-all duration-150 ${
-                  isCurrent
+                className={`h-9 w-9 rounded-xl text-xs font-bold transition-all duration-150 ${isCurrent
                     ? "ring-2 ring-orange-500 ring-offset-1 bg-orange-500 text-white shadow-md"
                     : isAnswered
-                    ? "bg-orange-100 text-orange-700 hover:bg-orange-200"
-                    : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                }`}
+                      ? "bg-orange-100 text-orange-700 hover:bg-orange-200"
+                      : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                  }`}
               >
                 {i + 1}
               </button>
@@ -213,12 +209,24 @@ const TakeAssessment = () => {
   const [submitting, setSubmitting] = useState(false);
   const timerRef = useRef(null);
 
+  const assessment = currentAssisment?.assisment || currentAssisment;
+  const questions = assessment?.questionsId ?? assessment?.questions ?? [];
+  const answersRef = useRef(answers);
+  const questionsRef = useRef(questions);
+  const submittingRef = useRef(false);
+
   useEffect(() => {
     if (id) handleGetAssisment(id);
   }, [id]);
 
-  const assessment = currentAssisment?.assisment || currentAssisment;
-  const questions = assessment?.questionsId ?? assessment?.questions ?? [];
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
+  useEffect(() => {
+    questionsRef.current = questions;
+  }, [questions]);
+
   const timeLimit = (assessment?.duration ?? assessment?.timeLimit ?? 30) * 60; // in seconds
 
   /* Start timer once we know the time limit */
@@ -232,7 +240,7 @@ const TakeAssessment = () => {
     if (seconds === null || seconds <= 0) return;
     timerRef.current = setInterval(() => {
       setSeconds((s) => {
-        if (s <= 1) {
+        if (s <= 10) {
           clearInterval(timerRef.current);
           handleAutoSubmit();
           return 0;
@@ -242,21 +250,45 @@ const TakeAssessment = () => {
     }, 1000);
     return () => clearInterval(timerRef.current);
   }, [seconds === null ? null : 0]); // run once when seconds initializes
-
+  
+  // handle browser back button - auto submit if the user tries to go back
   const handleAutoSubmit = useCallback(() => {
+    if (submittingRef.current) return;
     doSubmit();
-  }, [answers, id]);
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const handleBack = () => {
+      handleAutoSubmit();
+    };
+
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handleBack);
+
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
+  }, [handleAutoSubmit, id]);
 
   const doSubmit = async () => {
+    if (submittingRef.current) return;
+
     clearInterval(timerRef.current);
+    submittingRef.current = true;
     setSubmitting(true);
 
-    const formattedAnswers = questions.map((q, i) => ({
+    const currentQuestions = questionsRef.current;
+    const currentAnswers = answersRef.current;
+
+    const formattedAnswers = currentQuestions.map((q, i) => ({
       questionId: q._id,
-      selectedOption: answers[i] ?? null,
+      selectedOption: currentAnswers[i] ?? null,
     }));
 
     const ok = await handleSubmitAssisment(id, { answers: formattedAnswers });
+    submittingRef.current = false;
     setSubmitting(false);
     if (ok) navigate("/home");
   };
@@ -267,6 +299,8 @@ const TakeAssessment = () => {
 
   const goNext = () => {
     if (current < questions.length - 1) setCurrent((c) => c + 1);
+    // console.log("Check for answers ", answers); //Check the Answers
+    // console.log("Check for questions ", questions); // Check the questions
   };
 
   const goPrev = () => {

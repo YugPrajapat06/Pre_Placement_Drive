@@ -18,7 +18,7 @@ const AssismentSchema = new mongoose.Schema({
     },
     duration : {
         type : Number,
-        default : 30
+        default : 40
     },
     endTime : {
         type : Date,

@@ -175,10 +175,11 @@ const getAssisment = async (req, res) => {
 }
 const addQuestion = async (req, res) => {
     const { question, options, correctOption, category, difficulty, explaination } = req.body
-
+    
+    
     try {
 
-        if (!question || !options || !correctOption || !category || !difficulty || !explaination) {
+        if (!question || !options || (correctOption != 0 && !correctOption) || !category || !difficulty || !explaination) {
             return res.status(400).json({ message: "All fields are required" });
         }
 

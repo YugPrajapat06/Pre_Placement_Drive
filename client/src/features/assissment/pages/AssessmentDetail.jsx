@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 const rules = [
+  "Make sure you complete assisment before 1 minute left.",
   "Do not switch tabs or leave the browser window during the assessment.",
   "Copy-pasting text from external sources is strictly prohibited.",
   "Ensure a stable internet connection before starting.",
@@ -51,7 +52,7 @@ const AssessmentDetail = () => {
 
   const assessment = currentAssisment?.assisment || currentAssisment;
   const totalQuestions = assessment?.questionsId?.length ?? assessment?.questions?.length ?? 20;
-  const timeLimit = assessment?.duration ?? assessment?.timeLimit ?? 30;
+  const timeLimit = assessment?.duration ?? assessment?.timeLimit ?? 60;
 
   const handleStart = async () => {
     if (!agreed) return;
