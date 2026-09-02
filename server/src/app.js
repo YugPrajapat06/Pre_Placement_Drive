@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser"
 import authRouter from "./routes/auth.route.js"
 import assismentRouter from "./routes/assisment.route.js"
 import questionRouter from "./routes/question.route.js"
+import skillRouter from "./routes/skill.route.js"
 
 const app = express()
 
@@ -12,7 +13,8 @@ app.use(cookieParser())
 
 app.use("/api/auth", authRouter)
 app.use("/api/assisment", assismentRouter)
-app.use("/api/admin", questionRouter)
+app.use("/api/question", questionRouter)
+app.use("/api/skill", skillRouter)
 
 
 export default app

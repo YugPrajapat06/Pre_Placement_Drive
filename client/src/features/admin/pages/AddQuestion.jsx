@@ -15,6 +15,163 @@ import {
   Eye,
 } from "lucide-react";
 
+export const categoryDomains = {
+  Aptitude: [
+    "Number System",
+    "Simplification and Approximation",
+    "HCF and LCM",
+    "Decimal Fractions",
+    "Percentage",
+    "Profit and Loss",
+    "Simple Interest",
+    "Compound Interest",
+    "Ratio and Proportion",
+    "Partnership",
+    "Average",
+    "Alligation and Mixtures",
+    "Problems on Ages",
+    "Time and Work",
+    "Pipes and Cisterns",
+    "Time, Speed and Distance",
+    "Problems on Trains",
+    "Boats and Streams",
+    "Permutation and Combination",
+    "Probability",
+    "Arithmetic Progression",
+    "Geometric Progression",
+    "Quadratic Equations",
+    "Logarithms",
+    "Surds and Indices",
+    "Algebra",
+    "Geometry",
+    "Mensuration",
+    "Coordinate Geometry",
+    "Trigonometry",
+    "Data Interpretation",
+    "Data Sufficiency",
+    "Venn Diagram",
+    "Series",
+    "Calendar",
+    "Clocks",
+  ],
+  Reasoning: [
+    "Introduction to Logical Reasoning",
+    "Direction Sense",
+    "Blood Relations",
+    "Coding-Decoding",
+    "Alphabet Series",
+    "Number Series",
+    "Alphanumeric Series",
+    "Linear Arrangement",
+    "Circular Arrangement",
+    "Puzzles",
+    "Ranking and Order",
+    "Syllogism",
+    "Statement and Conclusion",
+    "Statement and Assumption",
+    "Statement and Argument",
+    "Cause and Effect",
+    "Assertion and Reason",
+    "Data Sufficiency",
+    "Analogy",
+    "Classification",
+    "Logical Sequence",
+    "Calendar",
+    "Clocks",
+    "Cube and Dice",
+    "Mirror Image",
+    "Water Image",
+    "Paper Folding",
+    "Paper Cutting",
+    "Figure Counting",
+    "Embedded Figures",
+    "Figure Analogy",
+    "Figure Classification",
+    "Non-Verbal Series",
+    "Critical Reasoning",
+    "Decision Making",
+  ],
+  Verbal: [
+    "Introduction to Verbal Reasoning",
+    "Advice and Expectations",
+    "Reading Comprehension",
+    "Sentence Ordering",
+    "Sentence Completion",
+    "Fill in the Blanks",
+    "Cloze Test",
+    "Error Identification",
+    "Sentence Improvement",
+    "Sentence Correction",
+    "Para Jumbles",
+    "Paragraph Completion",
+    "Vocabulary",
+    "Synonyms",
+    "Antonyms",
+    "One Word Substitution",
+    "Idioms and Phrases",
+    "Spellings",
+    "Active and Passive Voice",
+    "Direct and Indirect Speech",
+    "Tenses",
+    "Subject-Verb Agreement",
+    "Articles",
+    "Prepositions",
+    "Conjunctions",
+    "Pronouns",
+    "Nouns",
+    "Verbs",
+    "Adjectives",
+    "Adverbs",
+    "Punctuation",
+  ],
+  Technical: [
+    "Programming Fundamentals",
+    "C Programming",
+    "C++",
+    "Java",
+    "Python",
+    "JavaScript",
+    "Object-Oriented Programming",
+    "Data Structures",
+    "Algorithms",
+    "Time Complexity",
+    "Space Complexity",
+    "Recursion",
+    "Arrays",
+    "Strings",
+    "Linked Lists",
+    "Stack",
+    "Queue",
+    "Hashing",
+    "Trees",
+    "Binary Search Tree",
+    "Heap",
+    "Trie",
+    "Graphs",
+    "Dynamic Programming",
+    "Greedy Algorithms",
+    "Backtracking",
+    "Searching",
+    "Sorting",
+    "DBMS",
+    "SQL",
+    "Operating System",
+    "Computer Networks",
+    "Software Engineering",
+    "HTML",
+    "CSS",
+    "React.js",
+    "Node.js",
+    "Express.js",
+    "REST API",
+    "Authentication",
+    "MongoDB",
+    "Git",
+    "GitHub",
+    "System Design",
+  ],
+};
+
 const AddQuestion = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -28,6 +185,7 @@ const AddQuestion = () => {
   const [optionD, setOptionD] = useState("");
   const [correctOption, setCorrectOption] = useState(0); // 0 to 3
   const [category, setCategory] = useState("Technical");
+  const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
   const [explaination, setExplaination] = useState("");
 
@@ -53,6 +211,7 @@ const AddQuestion = () => {
     if (!optionA.trim() || !optionB.trim() || !optionC.trim() || !optionD.trim()) {
       return setErrorMsg("All 4 options are required.");
     }
+    if (!topic.trim()) return setErrorMsg("Question topic is required.");
     if (!explaination.trim()) return setErrorMsg("Explanation text is required.");
     
     const payload = {
@@ -60,6 +219,7 @@ const AddQuestion = () => {
       options: [optionA.trim(), optionB.trim(), optionC.trim(), optionD.trim()],
       correctOption: Number(correctOption),
       category,
+      topic: topic.trim(),
       difficulty,
       explaination: explaination.trim(),
     };
@@ -78,6 +238,9 @@ const AddQuestion = () => {
       setOptionC("");
       setOptionD("");
       setCorrectOption(0);
+      setCategory("Technical");
+      setTopic("");
+      setDifficulty("Easy");
       setExplaination("");
       // Navigate back after a short delay
       setTimeout(() => {
@@ -90,6 +253,13 @@ const AddQuestion = () => {
   useEffect(() => {
     setCorrectOption(0)
   },[])
+
+  useEffect(() => {
+    if (topic && !categoryDomains[category]?.includes(topic)) {
+      setTopic("");
+    }
+  }, [category, topic]);
+
   // Pre-calculated display helper variables for the Live Preview Pane
   const previewOptions = [
     optionA || "Option A text...",
@@ -316,6 +486,25 @@ const AddQuestion = () => {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700">Question Topic *</label>
+                <select
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 focus:border-orange-500 focus:bg-white focus:outline-none"
+                >
+                  <option value="">Select a topic</option>
+                  {(categoryDomains[category] || []).map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  Choose a topic from the selected category. All listed topics are required to be categorized.
+                </p>
+              </div>
+
               {/* Explanation (spelled explaination to match schema) */}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700">Explanation *</label>
@@ -365,12 +554,15 @@ const AddQuestion = () => {
               {/* Assessment Question Card Mock */}
               <div className="rounded-2xl border border-slate-150 bg-white p-5 shadow-md space-y-4">
                 {/* Header tags */}
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${catBadgeColor}`}>
                     {category}
                   </span>
                   <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold ${diffBadgeColor}`}>
                     {difficulty}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold text-slate-600">
+                    {topic}
                   </span>
                 </div>
 

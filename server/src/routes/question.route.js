@@ -6,6 +6,7 @@ import authorize from "../middlewares/authorize.middleware.js"
 const questionRouter = express.Router();
 
 questionRouter.get("/", IdentifyUser, authorize("admin"), questionController.getAllQuestions);
+questionRouter.get("/:topic", IdentifyUser, authorize("user","admin"), questionController.getQuestionsByTopic);
 
 
 export default questionRouter

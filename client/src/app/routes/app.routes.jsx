@@ -11,6 +11,8 @@ import Protected from "../components/Protected";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Admin from "../../features/admin/pages/Admin";
 import AddQuestion from "../../features/admin/pages/AddQuestion";
+import Skill from "../../features/skill-build/pages/Skill";
+import SkillTest from "../../features/skill-build/pages/SkillTest";
 
 export const router = createBrowserRouter([
     {
@@ -66,6 +68,14 @@ export const router = createBrowserRouter([
                 path: "/admin/add-question",
                 element: <AddQuestion />
             },
+            {
+                path: "/skill-building",
+                element: <Skill/>
+            },
+            {
+                path: "/skill-building/:id",
+                element: <SkillTest/>
+            }
         ],
     },
 ]);

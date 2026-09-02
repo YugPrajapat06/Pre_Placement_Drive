@@ -174,12 +174,12 @@ const getAssisment = async (req, res) => {
     }
 }
 const addQuestion = async (req, res) => {
-    const { question, options, correctOption, category, difficulty, explaination } = req.body
+    const { question, options, correctOption, category, topic, difficulty, explaination } = req.body
     
     
     try {
 
-        if (!question || !options || (correctOption != 0 && !correctOption) || !category || !difficulty || !explaination) {
+        if (!question || !options || (correctOption != 0 && !correctOption) || !category || !topic || !difficulty || !explaination) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -192,7 +192,7 @@ const addQuestion = async (req, res) => {
         if (questionAlreadyExist) {
             return res.status(409).json({ message: "Question already exist" });
         }
-        const newQuestion = await questionModel.create({ question, options, correctOption, category, difficulty, explaination });
+        const newQuestion = await questionModel.create({ question, options, correctOption, category, topic, difficulty, explaination });
         return res.status(201).json({ message: "Question added successfully", question: newQuestion });
     } catch (error) {
         return res.status(500).json({ message: "Error adding question", error });

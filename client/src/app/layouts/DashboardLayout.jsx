@@ -13,7 +13,7 @@ const DashboardLayout = () => {
           // Desktop: push content right of 256px sidebar
           "lg:ml-64",
           // Mobile: add top padding for the header bar + bottom padding for tab bar
-          "pt-[60px] pb-[68px] lg:pt-0 lg:pb-0",
+          "pt-15 pb-17 lg:pt-0 lg:pb-0",
           "min-h-screen",
         ].join(" ")}
       >

@@ -10,6 +10,7 @@ import {
   X,
   User,
   ShieldCheck,
+  Shield
 } from "lucide-react";
 import { useSelector } from "react-redux";
 
@@ -23,6 +24,11 @@ const navItems = [
     label: "Assessment",
     icon: ClipboardList,
     path: "/assessment",
+  },
+  {
+    label: "Skill-Building",
+    icon: Zap,
+    path: '/skill-building'
   },
   {
     label: "Interview",
