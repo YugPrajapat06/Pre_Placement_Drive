@@ -19,7 +19,6 @@
 /* Custom Neumorphism Styles */
 .neu-card {
   background: #f1f5f9;
-  box-shadow: 12px 12px 24px #cbd5e1, -12px -12px 24px #ffffff;
   border-radius: 1.5rem;
 }
 

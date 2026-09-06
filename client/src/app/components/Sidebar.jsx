@@ -10,7 +10,8 @@ import {
   X,
   User,
   ShieldCheck,
-  Shield
+  Shield,
+  FileText
 } from "lucide-react";
 import { useSelector } from "react-redux";
 
@@ -35,6 +36,12 @@ const navItems = [
     icon: Mic2,
     path: "/interview",
   },
+  {
+    label: "Resume",
+    icon: FileText,
+    path: "/resume",
+
+  }
 ];
 
 const Sidebar = () => {
@@ -42,7 +49,7 @@ const Sidebar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const {user} = useSelector(state => state.auth);
 
-  const activeNavItems = user?.role === "admin" 
+  const activeNavItems = user?.role === "admin"
     ? [...navItems, { label: "Admin Panel", icon: ShieldCheck, path: "/admin" }]
     : navItems;
 

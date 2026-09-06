@@ -2,7 +2,7 @@ import React from 'react'
 
 const SkillTest = () => {
   return (
-    <main>
+    <main className=''>
         
     </main>
   )

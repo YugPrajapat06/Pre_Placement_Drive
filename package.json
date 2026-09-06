@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@imagekit/nodejs": "^7.11.0",
+    "multer": "^2.3.0",
+    "resume-parser": "^1.1.0",
+    "simple-resume-parser": "^1.1.8"
+  }
+}

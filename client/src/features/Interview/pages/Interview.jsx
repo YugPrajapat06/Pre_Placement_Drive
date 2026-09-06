@@ -1,5 +1,10 @@
-import React from "react";
-import { Mic2, Video, MessageSquare, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
+import React, { useEffect } from "react";
+import { Mic2, Video, MessageSquare, CheckCircle2, ArrowRight, Sparkles, Dot } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useRef } from "react";
+import { useCandidate } from "../hooks/useCandidate";
+import { useResume } from "../../resume/hooks/useResume";
 
 const interviewTypes = [
   {
@@ -35,22 +40,56 @@ const interviewTypes = [
 ];
 
 const Interview = () => {
+
+  const { handleGetCandidateProfile } = useCandidate();
+  const { handleGetActiveResume } = useResume();
+
+  useEffect(() => {
+    handleGetCandidateProfile()
+  }, [])
+
+  const { profile } = useSelector((state) => state.candidate);
+
+  useEffect(() => {
+    handleGetActiveResume(profile.activeResumeId)
+
+
+  }, [])
+
+  const { activeResume } = useSelector((state) => state.resume)
+
+  console.log(" Active Check :: ", activeResume);
+
   return (
     <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-8 text-slate-900">
       <div className="mx-auto max-w-5xl flex flex-col gap-8">
         {/* Header */}
-        <header className="rounded-4xl border border-orange-100 bg-white/80 px-6 py-6 shadow-[0_20px_60px_-25px_rgba(249,115,22,0.35)] backdrop-blur sm:px-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-sm font-medium text-orange-700 mb-3">
-            <Sparkles size={14} />
-            Interview Prep
-          </div>
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <header className="rounded-4xl border flex flex-col justify-center items-center text-center border-orange-100 bg-white/80 px-6 py-6 shadow-[0_20px_60px_-25px_rgba(249,115,22,0.35)] backdrop-blur sm:px-8">
+
+          <h1 className="text-2xl uppercase tracking-widest font-semibold  sm:text-4xl">
             Interview Rounds
           </h1>
           <p className="mt-2 text-sm text-slate-500 sm:text-base max-w-xl">
             Prepare for every stage of the hiring process. Choose a round and
             start practicing with AI-powered mock sessions.
           </p>
+          <div className="flex flex-col justify-center items-center gap-1 py-5">
+            <p className="text-xl font-semibold text-amber-500"> {profile.education.college}</p>
+            <div className="flex justify-center items-center  text-[14px]">
+              <p>{profile.education.course}</p>
+              <Dot />
+              <p>{profile.education.branch}</p>
+            </div>
+            <div className="w-full flex flex-col justify-center items-center">
+              <div className="bg-black/10 px-2 py-1 ">
+                <button
+                  onClick={() => fileInputRef.current.click()}
+                  className="cursor-pointer  text-sm font-semibold font-sans uppercase tracking-widest bg-linear-60 from-emerald-950  to-emerald-700 bg-clip-text text-transparent">{activeResume ?'Your Resume : ' + activeResume.name : "Upload Resume"}</button>
+
+              </div>
+            </div>
+
+          </div>
         </header>
 
         {/* Cards */}

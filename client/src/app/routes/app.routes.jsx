@@ -4,7 +4,7 @@ import Register from "../../features/auth/pages/Register";
 import Landing from "../../features/landing/pages/Landing";
 import Deshboard from "../../features/assissment/pages/Deshboard";
 import Assessment from "../../features/assissment/pages/Assessment";
-import Interview from "../../features/assissment/pages/Interview";
+import Interview from "../../features/Interview/pages/Interview";
 import AssessmentDetail from "../../features/assissment/pages/AssessmentDetail";
 import TakeAssessment from "../../features/assissment/pages/TakeAssessment";
 import Protected from "../components/Protected";
@@ -13,6 +13,9 @@ import Admin from "../../features/admin/pages/Admin";
 import AddQuestion from "../../features/admin/pages/AddQuestion";
 import Skill from "../../features/skill-build/pages/Skill";
 import SkillTest from "../../features/skill-build/pages/SkillTest";
+import CandidateRegister from "../../features/Interview/pages/CandidateRegister";
+import InterviewGuard from "../../features/Interview/components/InterviewGuard";
+import Resume from "../../features/resume/pages/Resume";
 
 export const router = createBrowserRouter([
     {
@@ -57,8 +60,16 @@ export const router = createBrowserRouter([
                 element: <AssessmentDetail />
             },
             {
+                path: "/candidate/register",
+                element: <CandidateRegister />
+            },
+            {
                 path: "/interview",
-                element: <Interview />
+                element: (
+                    <InterviewGuard>
+                        <Interview />
+                    </InterviewGuard>
+                )
             },
             {
                 path: "/admin",
@@ -75,6 +86,10 @@ export const router = createBrowserRouter([
             {
                 path: "/skill-building/:id",
                 element: <SkillTest/>
+            },
+            {
+                path: '/resume',
+                element: <Resume/>
             }
         ],
     },
