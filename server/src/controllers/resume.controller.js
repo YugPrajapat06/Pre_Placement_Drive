@@ -9,6 +9,7 @@ const uploadResume = async (req, res) => {
     try {
         const file = req.file;
         const rawData = req.rawData;
+        const parsedData = req.parsedData;
         const { name, isDefault } = req.body;
         if (!file) {
             return res.status(400).json({ message: "No file uploaded" });
@@ -24,7 +25,8 @@ const uploadResume = async (req, res) => {
             userId: req.user.userId,
             resume: uploadResponse.url,
             name: name,
-            rawData: rawData
+            rawData: rawData,
+            parsedData: parsedData,
         })
 
         if (isDefault === 'true') {
@@ -34,7 +36,8 @@ const uploadResume = async (req, res) => {
                 { returnDocument: 'after' }
             );
         }
-
+        console.log(newResume);
+        
 
         return res.status(200).json({
             success: true,
