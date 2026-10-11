@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useCandidate } from "../hooks/useCandidate";
 import { useResume } from "../../resume/hooks/useResume";
+import { useInterview } from "../hooks/useInterview.js";
+import { useNavigate } from "react-router";
 
 const interviewTypes = [
   {
@@ -15,7 +17,8 @@ const interviewTypes = [
     tag: "Behavioral",
     color: "from-orange-400 to-orange-500",
     tagColor: "bg-orange-100 text-orange-700",
-    tips: ["Be concise", "Use STAR method", "Stay confident"],
+    tips: ["Be concise", "Use STAR method", "Stay confident"], 
+    active: true
   },
   {
     title: "Technical Interview",
@@ -26,6 +29,9 @@ const interviewTypes = [
     color: "from-violet-400 to-violet-500",
     tagColor: "bg-violet-100 text-violet-700",
     tips: ["Think aloud", "Ask clarifying Qs", "Optimize after solving"],
+    
+    active: true
+
   },
   {
     title: "Group Discussion",
@@ -36,13 +42,41 @@ const interviewTypes = [
     color: "from-emerald-400 to-emerald-500",
     tagColor: "bg-emerald-100 text-emerald-700",
     tips: ["Listen actively", "Build on others' ideas", "Summarize well"],
+   
+    active: false
   },
 ];
 
+
+
 const Interview = () => {
+
+
+  /**
+   * Hooks
+   */
+
+  const navigate = useNavigate()
 
   const { handleGetCandidateProfile } = useCandidate();
   const { handleGetActiveResume } = useResume();
+  const { handleCreateInterviewSession } = useInterview()
+
+  
+
+  /**
+   * Redux States
+   */
+  const interview = useSelector((state) => state.interview)
+
+
+  const [mokeReady, setMokeReady] = useState(false);
+  const [techReady, setTechReady] = useState(false);
+  const [groupReady, setGroupReady] = useState(false);
+
+  const readyArray = [mokeReady, techReady, groupReady]
+
+
 
   useEffect(() => {
     handleGetCandidateProfile()
@@ -53,12 +87,26 @@ const Interview = () => {
   useEffect(() => {
     handleGetActiveResume(profile.activeResumeId)
 
-
-  }, [])
+  }, [profile?.activeResumeId])
 
   const { activeResume } = useSelector((state) => state.resume)
 
-  console.log(" Active Check :: ", activeResume);
+
+  /**
+   * Callback Functions start from here
+   */
+
+  const handleReady = (index)=>{
+    if(index === 0) mokeReady ? setMokeReady(false) : setMokeReady(true)
+    else if(index === 1) techReady ? setTechReady(false) : setTechReady(true)
+    else if(index === 2) groupReady ? setGroupReady(false) : setGroupReady(true)
+  }
+
+  const CreateSession = async(interviewType) =>{
+    const session = await handleCreateInterviewSession(interviewType)
+    console.log('session check ', session)
+    session && navigate(`/mock-interview/${interviewType}/${session._id}`)
+  }
 
   return (
     <div className="min-h-screen px-4 py-8 sm:px-6 lg:px-8 text-slate-900">
@@ -84,8 +132,7 @@ const Interview = () => {
               <div className="bg-black/10 px-2 py-1 ">
                 <button
                   onClick={() => fileInputRef.current.click()}
-                  className="cursor-pointer  text-sm font-semibold font-sans uppercase tracking-widest bg-linear-60 from-emerald-950  to-emerald-700 bg-clip-text text-transparent">{activeResume ?'Your Resume : ' + activeResume.name : "Upload Resume"}</button>
-
+                  className="cursor-pointer  text-sm font-semibold font-sans uppercase tracking-widest bg-linear-60 from-emerald-950  to-emerald-700 bg-clip-text text-transparent">{activeResume ? 'Default Resume : ' + activeResume.name : "Upload Resume"}</button>
               </div>
             </div>
 
@@ -94,7 +141,7 @@ const Interview = () => {
 
         {/* Cards */}
         <div className="grid gap-5 md:grid-cols-3">
-          {interviewTypes.map((item) => {
+          {interviewTypes.map((item, index) => {
             const Icon = item.icon;
             return (
               <div
@@ -130,28 +177,37 @@ const Interview = () => {
                   ))}
                 </ul>
 
-                <button className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow shadow-orange-200 transition hover:from-orange-600 hover:to-orange-700 active:scale-95">
-                  Start Session
-                  <ArrowRight size={15} />
-                </button>
+                {item.active &&
+                  <>
+                    <label className="items-center flex mt-3 gap-2 text-sm to-emerald-700">
+                      <input type="checkbox"
+                        onChange={() => {
+                          handleReady(index)
+                        }}
+                      />
+                      Ready for interview
+                    </label>
+
+                    <button
+                    style={readyArray[index] ? {cursor:'pointer'}:{pointerEvents:'none', opacity:0.5, background:'gray'}}
+                    onClick={()=> {
+                      CreateSession(item.tag)
+                    }}
+                    className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow shadow-orange-200 transition hover:from-orange-600 hover:to-orange-700 active:scale-95">
+                      {interview.loading ? <p>Loading ... </p>: 
+                      <>
+                      <p>Start Session</p>
+                      <ArrowRight size={15} />
+                      </>}
+                    </button>
+                  </>
+                }
               </div>
             );
           })}
         </div>
 
-        {/* Coming soon banner */}
-        <div className="rounded-4xl border border-orange-100 bg-linear-to-br from-orange-500 to-orange-600 p-6 text-white shadow-lg shadow-orange-200">
-          <p className="text-sm font-semibold uppercase tracking-widest text-orange-200 mb-2">
-            Coming Soon
-          </p>
-          <h3 className="text-xl font-semibold">
-            AI-Powered Real-time Feedback
-          </h3>
-          <p className="mt-2 text-sm text-orange-100 max-w-md">
-            Soon you'll receive instant feedback on your communication, body
-            language, and technical depth during mock interviews.
-          </p>
-        </div>
+        
       </div>
     </div>
   );

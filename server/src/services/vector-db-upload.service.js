@@ -16,7 +16,7 @@ const splitter = new RecursiveCharacterTextSplitter({
     chunkOverlap: 0
 });
 
-export const uploadToPinecone = async (data, userId, type) => {
+export const uploadToPinecone = async (data, userId, type, interviewSessionId) => {
     const chunks = await splitter.splitText(data);
 
     const docs = await Promise.all(chunks.map(async (chunk) => {
@@ -28,16 +28,21 @@ export const uploadToPinecone = async (data, userId, type) => {
     }))
 
     const result = await index.upsert({
-        records : docs.map((doc, i) => ({
+        records: docs.map((doc, i) => ({
             id: `${userId}-${type}-${i}`,
             values: doc.embedding,
             metadata: {
                 text: doc.text,
                 userId: userId,
-                type: type
+                type: type,
+                ...(type === "Interview" && {
+                    interviewSessionId: interviewSessionId
+                })
             },
         }))
     });
+
+   
 
     return result
 }

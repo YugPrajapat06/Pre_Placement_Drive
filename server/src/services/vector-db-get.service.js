@@ -10,20 +10,25 @@ const embeddings = new MistralAIEmbeddings({
     model: 'mistral-embed'
 });
 
-export const getFromPinecone = async (query, userId, type) => {
+export const getFromPinecone = async (query, userId, type, interviewSessionId) => {
 
     const queryEmbedding = await embeddings.embedQuery(query)
 
     const result = await index.query({
-        queryRequests: [{
-            vector: queryEmbedding,
-            topK: 2,
-            includeMetadata: true,
-            filter: {
-                userId: { $eq: userId },
-                type: { $eq: type }
-            }
-        }],
+        vector: queryEmbedding,
+        topK: 2,
+        includeMetadata: true,
+        filter: {
+            userId: { $eq: userId },
+            type: { $eq: type },
+            ...(type === "Interview" && interviewSessionId
+                ? {
+                    interviewSessionId: {
+                        $eq: interviewSessionId
+                    }
+                }
+                : {})
+        }
     });
 
     return result

@@ -4,7 +4,8 @@ import assismentReducer from "../features/assissment/slices/assisment.slice.js";
 import adminReducer from "../features/admin/slices/admin.slice.js"
 import skillReducer from "../features/skill-build/slices/skill.slice.js"
 import candidateReducer from "../features/Interview/slices/candidate.slice.js";
-import resumeReducer from '../features/resume/slices/resume.slice.js'
+import resumeReducer from '../features/resume/slices/resume.slice.js';
+import interviewReducer from '../features/Interview/slices/interview.slice.js';
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     skill: skillReducer,
     candidate: candidateReducer,
     resume: resumeReducer,
+    interview: interviewReducer
   },
 });

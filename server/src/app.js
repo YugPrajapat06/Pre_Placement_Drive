@@ -7,6 +7,7 @@ import questionRouter from "./routes/question.route.js"
 import skillRouter from "./routes/skill.route.js"
 import candidateRouter from "./routes/candidate.route.js"
 import resumeRouter from "./routes/resume.route.js"
+import interviewRouter from "./routes/interview.route.js"
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use("/api/question", questionRouter);
 app.use("/api/skill", skillRouter);
 app.use('/api/candidate', candidateRouter);
 app.use('/api/resume', resumeRouter);
+app.use('/api/interview', interviewRouter);
 
 
 export default app

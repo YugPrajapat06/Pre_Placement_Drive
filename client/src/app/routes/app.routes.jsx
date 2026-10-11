@@ -16,6 +16,7 @@ import SkillTest from "../../features/skill-build/pages/SkillTest";
 import CandidateRegister from "../../features/Interview/pages/CandidateRegister";
 import InterviewGuard from "../../features/Interview/components/InterviewGuard";
 import Resume from "../../features/resume/pages/Resume";
+import Mock_Interview from "../../features/Interview/pages/Mock_Interview";
 
 export const router = createBrowserRouter([
     {
@@ -37,6 +38,14 @@ export const router = createBrowserRouter([
             <Protected>
                 <TakeAssessment />
             </Protected>
+        )
+    },
+    {
+        path: '/mock-interview/:type/:id',
+        element: (
+            <InterviewGuard>
+                <Mock_Interview/>
+            </InterviewGuard>
         )
     },
     {

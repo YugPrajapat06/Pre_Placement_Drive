@@ -11,9 +11,7 @@ export function useCandidate() {
     try {
       dispatch(setLoading(true));
       dispatch(setError(null));
-      const data = await getCandidateProfile();
-      console.log('candidate data check : ',data);
-      
+      const data = await getCandidateProfile();      
       dispatch(setProfile(data.candidate));
       // dispatch(setActiveResume(data.candidate.activeResumeId));
       dispatch(setProfileStatus("succeeded"));
